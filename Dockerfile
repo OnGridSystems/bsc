@@ -16,6 +16,7 @@ FROM alpine:latest
 
 RUN apk add --no-cache ca-certificates curl
 COPY --from=builder /go-ethereum/build/bin/geth /usr/local/bin/
+COPY bsc_mainnet bsc_mainnet
 
 EXPOSE 8545 8546 8547 30303 30303/udp
 ENTRYPOINT ["geth"]
