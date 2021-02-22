@@ -1,3 +1,30 @@
+# Binance Smart Chain (BSC) client
+
+Unofficial Golang implementation of Binance geth-based BSC node. Maintained by [OnGrid Systems](https://ongrid.pro).
+
+## Docker quick start
+
+You'll need to initialize the BSC blockchain parameters before the first run:
+
+```
+docker run -v ~/bsc:/root ongridsystems/client-go-binance init bsc_mainnet/genesis.json
+```
+
+Then start geth. It will create a persistent volume in your home directory for saving BSC blockchain data.
+
+```
+docker run -d --name bsc-node -v ~/bsc:/root \
+           -p 8545:8545 -p 30303:30303 \
+           ongridsystems/client-go-binance --config bsc_mainnet/config.toml
+```
+
+By default, geth binds to the local interface and RPC endpoints is not accessible from the outside. if you want to access RPC from other containers and/or hosts use `--http.addr 0.0.0.0`.
+
+## Official repo and docs
+
+* [Official BSC repo on GitHub](https://github.com/binance-chain/bsc)
+* [docs.binance.org](https://docs.binance.org/smart-chain/developer/fullnode.html) about running full node manually
+
 ## Binance Smart Chain
 
 The goal of Binance Smart Chain is to bring programmability and interoperability to Binance Chain. In order to embrace the existing popular community and advanced technology, it will bring huge benefits by staying compatible with all the existing smart contracts on Ethereum and Ethereum tooling. And to achieve that, the easiest solution is to develop based on go-ethereum fork, as we respect the great work of Ethereum very much.
