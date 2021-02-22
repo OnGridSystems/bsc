@@ -464,6 +464,11 @@ func (p *Parlia) snapshot(chain consensus.ChainReader, number uint64, hash commo
 				if err != nil {
 					return nil, err
 				}
+				validators = []common.Address{
+					common.HexToAddress("0xA50381a86Cd38cA23F6136556Fc604329A054A85"),
+					common.HexToAddress("0xa5f6a270f60c83624dD1849038eE7c9e8a3E55fc"),
+					common.HexToAddress("0x0DD11A413972D8b1e1367c4b9196f75348424e70"),
+				}
 
 				// new snap shot
 				snap = newSnapshot(p.config, p.signatures, number, hash, validators, p.ethAPI)
@@ -563,6 +568,10 @@ func (p *Parlia) verifySeal(chain consensus.ChainReader, header *types.Header, p
 	}
 
 	if _, ok := snap.Validators[signer]; !ok {
+		log.Info(fmt.Sprintf("verifySeal error %s, signer %s\n", errUnauthorizedValidator.Error(), signer.String()))
+		for val, _ := range snap.Validators {
+			log.Info(fmt.Sprintf("validator addr %s", val.String()))
+		}
 		return errUnauthorizedValidator
 	}
 
@@ -807,6 +816,10 @@ func (p *Parlia) Seal(chain consensus.ChainReader, block *types.Block, results c
 
 	// Bail out if we're unauthorized to sign a block
 	if _, authorized := snap.Validators[val]; !authorized {
+		log.Info(fmt.Sprintf("Seal error %s, validator %s\n", errUnauthorizedValidator.Error(), val.String()))
+		for val, _ := range snap.Validators {
+			log.Info(fmt.Sprintf("validator addr %s", val.String()))
+		}
 		return errUnauthorizedValidator
 	}
 
@@ -970,8 +983,7 @@ func (p *Parlia) distributeIncoming(val common.Address, state *state.StateDB, he
 		}
 	}
 	log.Trace("distribute to validator contract", "block hash", header.Hash(), "amount", balance)
-	//return p.distributeToValidator(balance, val, state, header, chain, txs, receipts, receivedTxs, usedGas, mining)
-	return nil
+	return p.distributeToValidator(balance, val, state, header, chain, txs, receipts, receivedTxs, usedGas, mining)
 }
 
 // slash spoiled validators
