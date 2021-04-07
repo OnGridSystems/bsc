@@ -6,8 +6,10 @@ Unofficial Golang implementation of Binance geth-based BSC node. Maintained by [
 
 You'll need to initialize the BSC blockchain parameters before the first run:
 
+> (Select dir bsc\_mainnet or bsc\_testnet)
+
 ```
-docker run -v ~/bsc:/root ongridsystems/client-go-binance init bsc_mainnet/genesis.json
+docker run -v ~/bsc:/root ongridsystems/client-go-binance init {bsc_mainnet|bsc_testnet}/genesis.json
 ```
 
 Then start geth. It will create a persistent volume in your home directory for saving BSC blockchain data.
@@ -15,7 +17,7 @@ Then start geth. It will create a persistent volume in your home directory for s
 ```
 docker run -d --name bsc-node -v ~/bsc:/root \
            -p 8545:8545 -p 30303:30303 \
-           ongridsystems/client-go-binance --config bsc_mainnet/config.toml
+           ongridsystems/client-go-binance --config {bsc_mainnet|bsc_testnet}/config.toml
 ```
 
 By default, geth binds to the local interface and RPC endpoints is not accessible from the outside. if you want to access RPC from other containers and/or hosts use `--http.addr 0.0.0.0`.
